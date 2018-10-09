@@ -39,6 +39,12 @@
 	  					<input type="text" id="name" placeholder="nombre del proceso" class="form-control" required>
 					  </div>
 					</div>
+
+					<div class="form-group col">
+					  <div class="control">
+	  					<input type="text" id="charToReplace" placeholder="Caracteres a remplazar" class="form-control" required>
+					  </div>
+					</div>
 					
 					<div class="form-group col">
 					  <div class="control">
@@ -70,9 +76,10 @@
     <script>
     function	sendProcess(){
 	    let name = document.getElementById('name').value
+	    let charToReplace = document.getElementById('charToReplace').value
 	    let char = document.getElementById('char').value
 	    let id = document.getElementById('id_simulation').value
-	    if(!name || !char) return alert('algun campo vacio')
+	    if(!name || !char || !charToReplace) return alert('algun campo vacio')
     	fetch('/api/process/add', {
 			  method: 'post',
 			  headers: {
@@ -82,7 +89,8 @@
 			  body: JSON.stringify({
 					"name":name,
 					"char":char,
-					"id": id
+					"id": id,
+					"charToReplace": charToReplace
 				})
 			}).then(res=>console.log(res))
 	    // 	.then(res=>res.json())

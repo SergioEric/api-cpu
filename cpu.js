@@ -25,13 +25,13 @@ function createRandomNumber(max){
 let longTime=0;
 class Process{
 
-	constructor(name, char){
+	constructor(name, char, charToReplace){
 		this.pid = this.fixId(shortid.generate())
 		this.name = name || 'noname'
 		this.priority = createRandomNumber(2)
 		this.char = char || shortid.generate()
 		// this.replaceChar()
-		this.charToReplace = 'A'
+		this.charToReplace = charToReplace
 		this.status = 0 // [0:listo,1:ejecucion,2:terminado]
 		this.positions = []
 		this.charReplaced = ''
@@ -70,6 +70,7 @@ class Process{
 			"pid": this.pid,
 			"name": this.name,
 			"char": this.char,
+			"charToReplace" : this.charToReplace,
 			"priority": this.priority,
 			"status": this.status
 		}

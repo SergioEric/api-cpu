@@ -63,12 +63,14 @@ router.post('/process/add', function(req, res, next) {
 
 	let name = req.body.name
 	let char = req.body.char
+	let charToReplace = req.body.charToReplace
 	let id = req.body.id
 	let custom_ref = db.ref(`api/cpu_list/simulation_${id}`);
 	console.log(req.body)
 	if(name & char) return res.status(400).send('Bad Request, name or char missing');
 	if(validatedChar(char)) return res.status(400).send('Bad Request,only 255 characters are allowed as maximum');
-  let proceso = new cpu(name,char)
+	
+  let proceso = new cpu(name,char,charToReplace)
   // let id =proceso.PID
   let info = proceso.info
   // ref.child(`simulation_${id}`).push(info)
