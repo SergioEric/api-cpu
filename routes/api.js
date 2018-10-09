@@ -7,17 +7,17 @@ const admin = require('../firebase-config');
 const db = admin.database();
 const ref = db.ref("api/");
 
-var data2xml = require('data2xml');
+// var data2xml = require('data2xml');
 
-var convert = data2xml();
+// var convert = data2xml();
 
-var options = {compact: true, ignoreComment: true, spaces: 4, fullTagEmptyElement:true};
+var options = {compact: true, ignoreComment: true, spaces: 4};
 
 const cpu = require('../cpu')
 /* HTTP methods */
-router.get('/process/:id', async (req,res)=>{
-	let id = req.params.id
-	let pid = req.params.pid
+router.get('/process/select', async (req,res)=>{
+	let id = req.query.id
+	// let pid = req.params.pid
 	let snap;
 	let singleProcessRef = db.ref(`api/cpu_list/simulation_${id}`)
 	singleProcessRef.on("value", function(snapshot) {
@@ -32,12 +32,12 @@ router.get('/process/:id', async (req,res)=>{
 	
 	res.send(xml2)
 })
-router.get('/process/all', async (req,res)=>{
+router.get('/process/all', (req,res)=>{
 	let snap;
-	let xml;
+	// let xml;
 	ref.on("value", function(snapshot) {
 		snap = JSON.stringify(snapshot.val())
-		xml = convert(snap)
+		// xml = convert(snap)
 	  console.log(snap);
 	}, function (errorObject) {
 	  console.log("The read failed: " + errorObject.code);
@@ -46,9 +46,9 @@ router.get('/process/all', async (req,res)=>{
 	let result = convert1.json2xml(snap, options);
 	res.set('Content-Type', 'text/xml');
 	// res.send(result)
-	var xml2 = convert('Message', {
-	  Text: 'Hello, World!'
-	});
+	// var xml2 = convert('Message', {
+	//   Text: 'Hello, World!'
+	// });
 	console.log(result)
 	// console.log(xml)
 	res.send(result)
@@ -69,7 +69,7 @@ router.post('/process/add', function(req, res, next) {
 	console.log(req.body)
 	if(name & char) return res.status(400).send('Bad Request, name or char missing');
 	if(validatedChar(char)) return res.status(400).send('Bad Request,only 255 characters are allowed as maximum');
-	
+
   let proceso = new cpu(name,char,charToReplace)
   // let id =proceso.PID
   let info = proceso.info
