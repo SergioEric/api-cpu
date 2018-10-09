@@ -11,7 +11,7 @@ var data2xml = require('data2xml');
 
 var convert = data2xml();
 
-var options = {compact: true, ignoreComment: true, spaces: 4};
+var options = {compact: true, ignoreComment: true, spaces: 4, fullTagEmptyElement:true};
 
 const cpu = require('../cpu')
 /* HTTP methods */
@@ -27,9 +27,10 @@ router.get('/process/:id', async (req,res)=>{
 	  console.log("The read failed: " + errorObject.code);
 	});
 	let xml = convert1.json2xml(snap, options);
+	let xml2= `<List>${xml}</List>`
 	res.set('Content-Type', 'text/xml');
 	
-	res.send(xml)
+	res.send(xml2)
 })
 router.get('/process/all', async (req,res)=>{
 	let snap;
