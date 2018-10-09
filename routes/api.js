@@ -11,12 +11,28 @@ var data2xml = require('data2xml');
 
 var convert = data2xml();
 
+var options = {compact: true, ignoreComment: true, spaces: 4};
 
 const cpu = require('../cpu')
 /* HTTP methods */
+router.get('/process/:id', async (req,res)=>{
+	let id = req.params.id
+	let pid = req.params.pid
+	let snap;
+	let singleProcessRef = db.ref(`api/cpu_list/simulation_${id}`)
+	singleProcessRef.on("value", function(snapshot) {
+		snap = JSON.stringify(snapshot.val())
+	  console.log(snap);
+	}, function (errorObject) {
+	  console.log("The read failed: " + errorObject.code);
+	});
+	let xml = convert1.json2xml(snap, options);
+	res.set('Content-Type', 'text/xml');
+	
+	res.send(xml)
+})
 router.get('/process/all', async (req,res)=>{
 	let snap;
-	var options = {compact: true, ignoreComment: true, spaces: 4};
 	let xml;
 	ref.on("value", function(snapshot) {
 		snap = JSON.stringify(snapshot.val())
@@ -60,6 +76,7 @@ router.post('/process/add', function(req, res, next) {
   custom_ref.child(process_id).set(info)
   res.send(`respond with all process ${ proceso.PID}`);
 });
+
 
 router.put('/process/:id', (req, res)=>{
 	if(!req.params.id) return res.status(400).send('Bad Request,id missing');
