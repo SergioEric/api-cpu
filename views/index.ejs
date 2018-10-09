@@ -1,11 +1,112 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+  <%- include('header'); -%>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <!-- <form action=""> -->
+  <div class="container">
+    <div class="col align-items-center">
+	      <h1 class="title">Api for cpu simulator</h1> <br>
+	      <h4 class="subtitle">
+	        <strong>GET   /api/process/all</strong>    to get all de process in a list <br>
+	        <strong>POST   /api/process/add</strong>  acepted body {"name":"copyFile", "char":"ASXASFFa"} <br>
+	        <strong>PUT   /api/process/:id</strong>  acepted body {"name":"copyFile", "char":"ASXASFFa"} <br>
+	        <strong>DELETE   /api/process/:id</strong>  pass the id
+	      </h4> <br>
+<!-- 		    <h1><%= title %></h1>
+		    <p>Welcome to <%= title %></p> -->
+				<div >
+							
+				<!-- 	<div class="form-group col">
+					  <div class="control">
+					    <input type="text" id="simulationName" placeholder="nombre simulacion" class="form-control" required>
+					  </div>
+					</div> -->
+					<div class="form-group col">
+						<div class="input-group mb-3">
+						  <div class="input-group-prepend">
+						    <label class="input-group-text" for="inputGroupSelect01">Simulacion</label>
+						  </div>
+						  <select class="custom-select" id="id_simulation">
+						    <option selected>Choose...</option>
+						  	 <% max.forEach(function(id){ %>
+						    		<option value="<%= id %>">Sim. <%= id %></option>
+								  <% }); %>
+						  </select>
+						  <!-- <input type="text" class="form-control" placeholder="quantum"> -->
+						</div>
+					</div>
+						  							
+					<div class="form-group col">
+					  <div class="control">
+	  					<input type="text" id="name" placeholder="nombre del proceso" class="form-control" required>
+					  </div>
+					</div>
+					
+					<div class="form-group col">
+					  <div class="control">
+			  			<input type="text" id="char" placeholder="Caracteres" class="form-control" required>
+					  </div>
+					</div>
+					
+<!-- 					<div class="form-group col">
+					  <div class="control">
+			  			<input type="text" id="id" placeholder="id" class="form-control" required>
+					  </div>
+					</div> -->
+					<div class="form-group  col">
+	    			<input type="submit" onclick="sendProcess()" class="btn btn-primary">
+					</div>
+	    		<!-- <input type="submit" onclick="updateProcess()" class="button  is-primary is-large" value="update"> -->
+				</div>
+  		<!-- </div>	 -->
+    	<!-- </section> -->
+    <!-- </form> -->
+
+
+    </div>
+    </div>
+  <!-- </section> -->
+
+<!-- <div class="section"> -->
+<!-- </div> -->
+    <script>
+    function	sendProcess(){
+	    let name = document.getElementById('name').value
+	    let char = document.getElementById('char').value
+	    let id = document.getElementById('id_simulation').value
+	    if(!name || !char) return alert('algun campo vacio')
+    	fetch('/api/process/add', {
+			  method: 'post',
+			  headers: {
+			    'Accept': 'application/json, text/plain, */*',
+			    'Content-Type': 'application/json'
+			  },
+			  body: JSON.stringify({
+					"name":name,
+					"char":char,
+					"id": id
+				})
+			}).then(res=>console.log(res))
+	    // 	.then(res=>res.json())
+			  // .then(res => console.log(res));
+    }
+
+    function updateProcess() {
+	    let name = document.getElementById('name').value
+	    let char = document.getElementById('char').value
+	    let id = document.getElementById('id').value
+    	fetch(`/api/process/${id}`, {
+			  method: 'put',
+			  headers: {
+			    'Accept': 'application/json, text/plain, */*',
+			    'Content-Type': 'application/json'
+			  },
+			  body: JSON.stringify({
+					"name":name,
+					"char":char
+				})
+			}).then(res=>console.log(res))
+    }
+
+    </script>
+    <%- include('footer'); -%>
   </body>
 </html>
