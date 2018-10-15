@@ -7,7 +7,6 @@ const db = admin.database();
 
 const max_simulation = db.ref("api/max_simulation")
 
-const cache = require('memory-cache');
 const len_simulation = require('./len_simulation');
 const async = require('async')
 
