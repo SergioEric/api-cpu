@@ -8,19 +8,6 @@ const db = admin.database();
 const ref = db.ref("api/");
 
 const _async = require('async');
-let stack = []
-
-let getDataFromFirebase =  (callback)=>{
-	//
-	callback(null,)
-}
-let formatXML = (callback)=>{
-		//
-		callback
-}
-// var data2xml = require('data2xml');
-
-// var convert = data2xml();
 
 var options = {compact: true, ignoreComment: true, spaces: 4,fullTagEmptyElement:true};
 
