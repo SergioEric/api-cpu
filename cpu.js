@@ -3,32 +3,28 @@ const shortid = require('shortid')
 // let clc = require("cli-color");
 
 // const quantum = 5;//numero maximo de reemplazos de caracter por ejecucion
-function fixId(id){
-	let split = id.split("")
-	var abc=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","u","v","w","x","y","z"];
-	// for(let i =0;i<split.length;i++){
-			// if(typeof(split[i]) == Number ){
-			// 	return i;
-			// 	break;
-			// }
-			if(parseInt(split[0])){
-				split[0] = abc[createRandomNumber(25)]
-				return split.join("");
+// function fixId(id){
+// 	let split = id.split("")
+// 	var abc=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","u","v","w","x","y","z"];
 
-			}
-			return id
-		// }
-}
-function createRandomNumber(max){
-		return Math.round(Math.random()*max)
-	}
-let longTime=0;
+// 			if(parseInt(split[0])){
+// 				split[0] = abc[createRandomNumber(25)]
+// 				return split.join("");
+
+// 			}
+// 			return id
+
+// }
+// function createRandomNumber(max){
+// 		return Math.round(Math.random()*max)
+// 	}
+// let longTime=0;
 class Process{
 
 	constructor(name, char, charToReplace){
 		this.pid = this.fixId(shortid.generate())
 		this.name = name || 'noname'
-		this.priority = createRandomNumber(2)
+		this.priority = this.createRandomNumber(2)
 		this.char = char || shortid.generate()
 		// this.replaceChar()
 		this.charToReplace = charToReplace

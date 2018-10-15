@@ -7,30 +7,89 @@ const admin = require('../firebase-config');
 const db = admin.database();
 const ref = db.ref("api/");
 
+const _async = require('async');
+let stack = []
+
+let getDataFromFirebase =  (callback)=>{
+	//
+	callback(null,)
+}
+let formatXML = (callback)=>{
+		//
+		callback
+}
 // var data2xml = require('data2xml');
 
 // var convert = data2xml();
 
-var options = {compact: true, ignoreComment: true, spaces: 4};
+var options = {compact: true, ignoreComment: true, spaces: 4,fullTagEmptyElement:true};
 
 const cpu = require('../cpu')
 /* HTTP methods */
 router.get('/process/select', async (req,res)=>{
 	let id = req.query.id
-	// let pid = req.params.pid
 	let snap;
 	let singleProcessRef = db.ref(`api/cpu_list/simulation_${id}`)
-	singleProcessRef.on("value", function(snapshot) {
-		snap = JSON.stringify(snapshot.val())
-	  console.log(snap);
-	}, function (errorObject) {
-	  console.log("The read failed: " + errorObject.code);
+	_async.waterfall([
+		function(callback) {
+			//cambiamos ref.on por ref.once
+			singleProcessRef.once("value", function(snapshot) {
+				// snap = JSON.stringify(snapshot.val())
+				console.log(snapshot.val())
+				console.log('__________________________________________________________')
+				callback(null, snapshot.val())
+			}, function (errorObject) {
+				callback(errorObject)
+			  console.log("The read failed: " + errorObject.code);
+			});
+		 },
+		function(snap, callback) {
+			let a = snap;
+			let msgsKeys = Object.keys(a);
+			// let newObj ={'List':[]}
+			let newObj =[]
+			let q;
+			for(let i=0; i< msgsKeys.length; i++)
+			{
+				// console.log(msgsKeys[i]);
+				if(msgsKeys[i] != 'quantum'){
+					let msgType     = msgsKeys[i];
+					let msgContent  = a[msgType];
+					newObj.push(msgContent)
+					// console.log(JSON.stringify(msgContent));
+				}else{
+					// newObj.push({'quantum':a['quantum']})
+					q =a['quantum']
+				}
+
+			}
+			
+			console.log(JSON.stringify(newObj))
+			callback(null,{Process:newObj,quantum:q})
+		 },
+		 function(json,callback){
+			let xml = convert1.json2xml(json, options);
+			let xml2= `<List>${xml}</List>`
+			callback(null,xml2)
+		 }
+	], function(err, results) {
+		// console.log(err)
+		res.set('Content-Type', 'text/xml');
+		res.send(results)
 	});
-	let xml = convert1.json2xml(snap, options);
-	let xml2= `<List>${xml}</List>`
-	res.set('Content-Type', 'text/xml');
+	// singleProcessRef.on("value", function(snapshot) {
+	// 	snap = JSON.stringify(snapshot.val())
+	// }, function (errorObject) {
+	//   console.log("The read failed: " + errorObject.code);
+	// });
+
+
+	// let xml = convert1.json2xml(snap, options);
+	// let xml2= `<List>${xml}</List>`
+	// res.set('Content-Type', 'text/xml');
 	
-	res.send(xml2)
+	// res.send(xml2)
+	// res.render('test', {'data':snap})
 })
 router.get('/process/all', (req,res)=>{
 	let snap;
@@ -81,21 +140,21 @@ router.post('/process/add', function(req, res, next) {
 });
 
 
-router.put('/process/:id', (req, res)=>{
-	if(!req.params.id) return res.status(400).send('Bad Request,id missing');
+// router.put('/process/:id', (req, res)=>{
+// 	if(!req.params.id) return res.status(400).send('Bad Request,id missing');
 
-	let processRef = ref.child(req.params.id);
-	// console.log(processRef.exists())
-	console.log(processRef)
-	if(!processRef) return res.status(400).send('Bad Request,id dosnt exists');
-	let name = req.body.name
-	let char = req.body.char
-	processRef.update({
-	  "name": name,
-		"char": char,
-	});
-	res.send('updated')
-})
+// 	let processRef = ref.child(req.params.id);
+// 	// console.log(processRef.exists())
+// 	console.log(processRef)
+// 	if(!processRef) return res.status(400).send('Bad Request,id dosnt exists');
+// 	let name = req.body.name
+// 	let char = req.body.char
+// 	processRef.update({
+// 	  "name": name,
+// 		"char": char,
+// 	});
+// 	res.send('updated')
+// })
 
 // router.delete()
 
